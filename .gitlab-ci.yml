@@ -484,13 +484,13 @@ test_flash_artifact_noblobs_v1_1:
   before_script:
     - mv build_jade_v1_1_noblobs_ci build
 
-build_jadepy_wheel:
+build_jade_client_wheel:
   tags:
     - ga
   stage: build
   artifacts:
     expire_in: 14 days
-    name: jadepy
+    name: jade_client
     when: on_success
     paths:
     - dist

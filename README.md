@@ -145,9 +145,9 @@ The following will build a docker image running the headless ci-test (approves e
 docker build -t jade-qemu-ci -f Dockerfile.qemu .
 docker run --rm -p 30121:30121 -it jade-qemu-ci
 ```
-The python 'jadepy' api can talk to it as if it were a serial interface, if given the device string 'tcp:localhost:30121'.
+The python 'jade_client' api can talk to it as if it were a serial interface, if given the device string 'tcp:localhost:30121'.
 ```
-python -c "from jadepy.jade import JadeAPI; jade = JadeAPI.create_serial(device='tcp:localhost:30121'); jade.connect(); print(jade.get_version_info()); jade.disconnect()"
+python -c "from jade_client.jade import JadeAPI; jade = JadeAPI.create_serial(device='tcp:localhost:30121'); jade.connect(); print(jade.get_version_info()); jade.disconnect()"
 ```
 
 Similarly, for a manually driven web-enabled 'virtual jade' (at 'http://localhost:30122/'):
@@ -156,7 +156,7 @@ docker build -t jade-qemu-web -f Dockerfile.qemu --build-arg="SDK_CONFIG=configs
 docker run --rm -p 30121:30121 -p 30122:30122 -it jade-qemu-web
 ```
 
-Alternatively, to run the qemu emulator with display and camera support is to run
+Alternatively, to run the qemu emulator with display and camera support, run:
 ```
 main/qemu/run_emulator.sh
 ```
