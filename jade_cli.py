@@ -7,7 +7,7 @@ import logging
 import os
 import time
 
-from jadepy.jade import JadeAPI
+from jade_client.jade import JadeAPI
 
 
 class JadeClient:

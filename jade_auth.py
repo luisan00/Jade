@@ -2,7 +2,7 @@
 
 import sys
 import logging
-from jadepy import JadeAPI, JadeError
+from jade_client import JadeAPI, JadeError
 
 LOGGING = True
 
@@ -19,11 +19,11 @@ if LOGGING:
     jadehandler = logging.StreamHandler()
     jadehandler.setLevel(logging.INFO)
 
-    logger = logging.getLogger('jadepy.jade')
+    logger = logging.getLogger('jade_client.jade')
     logger.setLevel(logging.DEBUG)
     logger.addHandler(jadehandler)
 
-    logger = logging.getLogger('jadepy.jade-device')
+    logger = logging.getLogger('jade_client.jade-device')
     logger.setLevel(logging.DEBUG)
     logger.addHandler(jadehandler)
 

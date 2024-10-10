@@ -9,7 +9,7 @@ import logging
 import argparse
 import subprocess
 
-from jadepy import JadeAPI
+from jade_client import JadeAPI
 from tools import fwtools
 
 TEST_MNEMONIC = 'fish inner face ginger orchard permit useful method fence \
@@ -27,11 +27,11 @@ COMP_FW_DIR = 'build'
 # Enable jade debug logging
 jadehandler = logging.StreamHandler()
 
-logger = logging.getLogger('jadepy.jade')
+logger = logging.getLogger('jade_client.jade')
 logger.setLevel(logging.DEBUG)
 logger.addHandler(jadehandler)
 
-device_logger = logging.getLogger('jadepy.jade-device')
+device_logger = logging.getLogger('jade_client.jade-device')
 device_logger.setLevel(logging.DEBUG)
 device_logger.addHandler(jadehandler)
 

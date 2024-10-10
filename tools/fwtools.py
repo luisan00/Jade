@@ -10,7 +10,7 @@ FWFILE_TYPE_FULL = 'fw.bin'
 FWFILE_TYPE_HASH = 'fw.bin.hash'
 FWFILE_TYPE_PATCH = 'patch.bin'
 
-logger = logging.getLogger('jadepy.jade')
+logger = logging.getLogger('jade_client.jade')
 
 
 # Prefix a directory to an existing filename/path

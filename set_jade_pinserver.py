@@ -4,16 +4,16 @@ import sys
 import logging
 import argparse
 from hashlib import sha256
-from jadepy import JadeAPI
+from jade_client import JadeAPI
 
 # Enable jade logging
 jadehandler = logging.StreamHandler()
 
-logger = logging.getLogger('jadepy.jade')
+logger = logging.getLogger('jade_client.jade')
 logger.setLevel(logging.INFO)
 logger.addHandler(jadehandler)
 
-device_logger = logging.getLogger('jadepy.jade-device')
+device_logger = logging.getLogger('jade_client.jade-device')
 device_logger.setLevel(logging.INFO)
 device_logger.addHandler(jadehandler)
 

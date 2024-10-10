@@ -10,7 +10,7 @@ import os
 import fwtools
 
 # Enable logging
-logger = logging.getLogger('jadepy.jade')
+logger = logging.getLogger('jade_client.jade')
 logger.setLevel(logging.INFO)
 
 INDEX_FILENAME = 'index.json'
