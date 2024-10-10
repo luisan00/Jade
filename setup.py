@@ -1,13 +1,13 @@
 from setuptools import setup
 
-# Extract the jadepy version
-version = open('jadepy/__init__.py').readlines()
+# Extract the jade-client version
+version = open('jade_client/__init__.py').readlines()
 version = [v for v in version if '__version__' in v][0].strip()
 version = version.split('"')[-2]
 assert len(version.split('.')) == 3, f'Invalid parsed version "{version}"'
 
 setup(
-    name='jadepy',
+    name='jade_client',
     version=version,
     description='Blockstream Jade Client API',
     long_description='A Python library for interacting with the Blockstream Jade hardware wallet',
@@ -35,7 +35,7 @@ setup(
         'Tracker': 'https://github.com/Blockstream/Jade/issues',
     },
     packages=[
-        'jadepy'
+        'jade_client'
     ],
     install_requires=[
         'cbor2>=5.4.6,<6.0.0',
