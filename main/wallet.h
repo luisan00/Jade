@@ -9,6 +9,22 @@
 // Blinding factors
 typedef enum { BF_ASSET, BF_VALUE, BF_ASSET_VALUE } BlindingFactorType_t;
 
+// The segwit version (or pre-segwit-ness) of an input
+typedef enum { SEGWIT_V0 = 0, SEGWIT_V1 = 1, SEGWIT_NONE = 0xff } segwit_version_t;
+
+// Input/Output data for signing a tx input
+typedef struct {
+    uint8_t signature_hash[SHA256_LEN]; // Input: The signature hash to sign
+    uint32_t path[16]; // Input: The path to sign with
+    uint8_t sig[EC_SIGNATURE_DER_MAX_LEN + 1]; // Output: The DER or Schnorr signature
+    char id[16 + 1]; // For caller use: not used by signing.
+    uint8_t segwit_ver; // Input: The segwit version of this input
+    uint8_t sighash; // Input: The sighash flags to sign with
+    bool use_ae; // Output: Whether the input is using anti-exfil
+    size_t path_len; // Input: The length of the path in "path"
+    size_t sig_len; // Output: The length of the signature in "sig"
+} signing_data_t;
+
 #define MAX_VARIANT_LEN 24
 #define MAX_GASERVICE_PATH_LEN 35
 
@@ -16,7 +32,9 @@ typedef enum { BF_ASSET, BF_VALUE, BF_ASSET_VALUE } BlindingFactorType_t;
 #define MAX_PATH_STR_LEN(max_path_elems) (1 + ((1 + 10 + 1) * max_path_elems) + 1)
 
 // Supported script variants (singlesig and multisig versions)
-typedef enum { GREEN, P2PKH, P2WPKH, P2WPKH_P2SH, MULTI_P2WSH, MULTI_P2SH, MULTI_P2WSH_P2SH } script_variant_t;
+// New variants must be added to the end, as this enum is persisted
+// e.g. in multisig registrations.
+typedef enum { GREEN, P2PKH, P2WPKH, P2WPKH_P2SH, MULTI_P2WSH, MULTI_P2SH, MULTI_P2WSH_P2SH, P2TR } script_variant_t;
 
 void wallet_init(void);
 
@@ -82,13 +100,17 @@ bool wallet_sign_message_hash(const uint8_t* signature_hash, size_t signature_ha
     size_t path_len, const uint8_t* ae_host_entropy, size_t ae_host_entropy_len, uint8_t* output, size_t output_len,
     size_t* written);
 
-bool wallet_get_tx_input_hash(struct wally_tx* tx, size_t index, bool is_witness, const uint8_t* script,
-    size_t script_len, uint64_t satoshi, uint8_t sighash, uint8_t* output, size_t output_len);
+// Get the signature hash for the "index"-th input of "tx".
+// For segwit v1, all "amounts" must be populated, and "scriptpubkeys" must
+// have an entry for each index.
+// Otherwise, only "amounts[index]" must be populated and "scriptpubkeys"
+// is unused.
+bool wallet_get_tx_input_hash(struct wally_tx* tx, size_t index, signing_data_t* sig_data, const uint8_t* script,
+    size_t script_len, const uint64_t* amounts, size_t amounts_len, const struct wally_map* scriptpubkeys);
 bool wallet_get_signer_commitment(const uint8_t* signature_hash, size_t signature_hash_len, const uint32_t* path,
     size_t path_len, const uint8_t* commitment, size_t commitment_len, uint8_t* output, size_t output_len);
-bool wallet_sign_tx_input_hash(const uint8_t* signature_hash, size_t signature_hash_len, const uint32_t* path,
-    size_t path_len, uint8_t sighash, const uint8_t* ae_host_entropy, size_t ae_host_entropy_len, uint8_t* output,
-    size_t output_len, size_t* written);
+// Sign the signature hash in sig_data.
+bool wallet_sign_tx_input_hash(signing_data_t* sig_data, const uint8_t* ae_host_entropy, size_t ae_host_entropy_len);
 
 bool wallet_hmac_with_master_key(const uint8_t* data, size_t data_len, uint8_t* output, size_t output_len);
 bool wallet_get_public_blinding_key(const uint8_t* master_blinding_key, size_t master_blinding_key_len,
@@ -99,7 +121,8 @@ bool wallet_get_shared_blinding_nonce(const uint8_t* master_blinding_key, size_t
 bool wallet_get_blinding_factor(const uint8_t* master_blinding_key, size_t master_blinding_key_len,
     const uint8_t* hash_prevouts, size_t hash_len, size_t output_index, BlindingFactorType_t type, uint8_t* output,
     size_t output_len);
-bool wallet_get_elements_tx_input_hash(struct wally_tx* tx, size_t index, bool is_witness, const uint8_t* script,
-    size_t script_len, const uint8_t* satoshi, size_t satoshi_len, uint8_t sighash, uint8_t* output, size_t output_len);
+bool wallet_get_elements_tx_input_hash(struct wally_tx* tx, size_t index, segwit_version_t segwit_ver,
+    const uint8_t* script, size_t script_len, const uint8_t* satoshi, size_t satoshi_len, uint8_t sighash,
+    uint8_t* output, size_t output_len);
 
 #endif /* WALLET_H_ */
