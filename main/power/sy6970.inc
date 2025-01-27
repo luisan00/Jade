@@ -5,7 +5,6 @@
 
 esp_err_t power_init(void)
 {
-    I2C_CHECK_RET(_power_i2c_init());
     return ESP_OK;
 }
 
