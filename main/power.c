@@ -24,6 +24,9 @@
 #include "power/twatchs3.inc"
 #elif defined(CONFIG_HAS_IP5306)
 #include "power/ip5306.inc"
+#elif defined(CONFIG_BOARD_TYPE_TTGO_TDISPLAYS3PROCAMERA)
+// tdisplay s3 pro camera has SY6970
+#include "power/sy6970.inc"
 #else
 // Stubs for other hw boards (ie. no power management)
 #include "power/minimal.inc"
