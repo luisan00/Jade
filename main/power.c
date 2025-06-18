@@ -30,6 +30,8 @@
 #elif defined(CONFIG_BOARD_TYPE_TTGO_TDISPLAYS3) && defined(CONFIG_HAS_BATTERY)
 // ttgo-tdisplays3 can read battery level and charging status if a battery is connected
 #include "power/tdisplays3.inc"
+#elif defined(CONFIG_BOARD_TYPE_TTGO_TDISPLAYS3PROCAMERA)
+#include "power/tdisplays3procamera.inc"
 #else
 // Stubs for other hw boards (ie. no power management)
 #include "power/minimal.inc"
